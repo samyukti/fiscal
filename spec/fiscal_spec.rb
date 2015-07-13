@@ -46,8 +46,4 @@ describe Fiscal do
     Date.today.fiscal.year.start.should eql(Date.today.beginning_of_year)
   end
 
-  it "returns current calendar year start date as fourth quarter start of India, for today" do
-    Date.today.fiscal(country: :in).quarter(4).start.should eql(Date.today.beginning_of_year)
-  end
-
 end
