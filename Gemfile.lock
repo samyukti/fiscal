@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fiscal (0.2.1)
+    fiscal (0.2.2)
       activesupport
 
 GEM
