@@ -22,6 +22,14 @@ describe Fiscal do
     Date.fiscal(date: '2014-01-10', country: :gb).year.start.should eql('2013-04-06'.to_date)
   end
 
+  it "returns '2013-04-06' as fiscal year start date of Great Britain for the date '2014-04-05'" do
+    Date.fiscal(date: '2014-04-05', country: :gb).year.start.should eql('2013-04-06'.to_date)
+  end
+
+  it "returns '2014-04-05' as fiscal year end date of Great Britain for the date '2014-04-05'" do
+    Date.fiscal(date: '2014-04-05', country: :gb).year.end.should eql('2014-04-05'.to_date)
+  end
+
   it "returns '2014-10-01' as fiscal quarter start date of US for the date '2014-11-11'" do
     Date.fiscal(date: '2014-11-11', country: :us).quarter.start.should eql('2014-10-01'.to_date)
   end
@@ -44,6 +52,14 @@ describe Fiscal do
 
   it "returns current calendar year start date as fiscal year start, for today" do
     Date.today.fiscal.year.start.should eql(Date.today.beginning_of_year)
+  end
+
+  it "returns '2023-04-06' as fiscal year start date of Great Britain for the date '2023-04-06'" do
+    Date.fiscal(date: '2023-04-06', country: :gb).year.start.should eql('2023-04-06'.to_date)
+  end
+
+  it "returns '2024-04-05' as fiscal year end date of Great Britain for the date '2023-04-06'" do
+    Date.fiscal(date: '2023-04-06', country: :gb).year.end.should eql('2024-04-05'.to_date)
   end
 
 end

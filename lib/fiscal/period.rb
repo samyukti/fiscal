@@ -121,15 +121,26 @@ module Fiscal
       i = options[:next] ? 0 : 1
 
       # find the start year, if the fiscal year spans across multiple years
-      year = (@date.to_date - (start_month - 1).months).year
+      year = (@date.to_date - (start_month-1).months).year
 
       # months to offset, for half-year, quarter and month
       add = (index - i) * (months_in(type))
 
       # construct the start date
-      Date.new(year, start_month, start_day) + add.months
+      possible_start_date = Date.new(year, start_month, start_day) + add.month
+      return possible_start_date unless type == :year
+
+      # the previous code is really funny around boundaries like the day before the new tax year starts, etc.
+      # this now makes whatever adjustments are needed in order to get to the expected result without breaking any
+      # legacy code
+      if options[:next]
+        possible_start_date = Date.new(year, start_month, start_day)
+        possible_start_date = possible_start_date + 1.year if possible_start_date <= @date
+      else
+        possible_start_date = possible_start_date - 1.year if possible_start_date > @date
+      end
+
+      possible_start_date
     end
-
   end
-
 end
