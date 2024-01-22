@@ -1,26 +1,26 @@
-module Fiscal
+# frozen_string_literal: true
 
+module Fiscal
   class FiscalPeriod
     include FiscalConfig
 
     class FiscalError < StandardError; end
 
     def initialize(options = {})
-
       @type    = (options[:type])
       @date    = (options[:date] || Date.today).to_date
       @country = (options[:country] || :nil).to_sym
 
-      if options[:index]
-        # user input
-        @index = options[:index].to_i
-      elsif @type == :year
-        # only 1 year in a fiscal year
-        @index = 1
-      else
-        # if the user does not enter, compute the index
-        @index = number
-      end
+      @index = if options[:index]
+                 # user input
+                 options[:index].to_i
+               elsif @type == :year
+                 # only 1 year in a fiscal year
+                 1
+               else
+                 # if the user does not enter, compute the index
+                 number
+               end
 
       validate
     end
@@ -28,16 +28,18 @@ module Fiscal
     def validate
       # date validation is handled by active support
       # country
-      raise(FiscalError, "`#{@country}` is not a recognized country") unless self.config()[@country]
+      unless config[@country]
+        raise(FiscalError, "`#{@country}` is not a recognized country")
+      end
+
       # index
       valid_indexes = (1..(12 / months_in(type)))
-      raise(FiscalError, "`#{@index}` is not a valid index for `#{@type}`") unless valid_indexes.include?(@index)
+      unless valid_indexes.include?(@index)
+        raise(FiscalError, "`#{@index}` is not a valid index for `#{@type}`")
+      end
     end
 
-    def type
-      # return type, in case user decides to pass around the return object
-      @type
-    end
+    attr_reader :type
 
     def start
       # start date
@@ -59,7 +61,7 @@ module Fiscal
       else
         # find the number of intervals from start of the year
         start = start_date(type: :year)
-        ((months_between(start, @date).to_f) / months_in(@type)).ceil
+        (months_between(start, @date).to_f / months_in(@type)).ceil
       end
     end
 
@@ -93,13 +95,14 @@ module Fiscal
       number.to_s
     end
 
-  private
+    private
+
     def start_month
-      self.config()[@country][:mm]
+      config[@country][:mm]
     end
 
     def start_day
-      self.config()[@country][:dd]
+      config[@country][:dd]
     end
 
     def months_between(from, to)
@@ -107,7 +110,7 @@ module Fiscal
     end
 
     def months_in(type)
-      {year: 12, half_year: 6, quarter: 3, month: 1}[type]
+      { year: 12, half_year: 6, quarter: 3, month: 1 }[type]
     end
 
     def start_date(options = {})
@@ -121,10 +124,10 @@ module Fiscal
       i = options[:next] ? 0 : 1
 
       # find the start year, if the fiscal year spans across multiple years
-      year = (@date.to_date - (start_month-1).months).year
+      year = (@date.to_date - (start_month - 1).months).year
 
       # months to offset, for half-year, quarter and month
-      add = (index - i) * (months_in(type))
+      add = (index - i) * months_in(type)
 
       # construct the start date
       possible_start_date = Date.new(year, start_month, start_day) + add.month
@@ -135,9 +138,9 @@ module Fiscal
       # legacy code
       if options[:next]
         possible_start_date = Date.new(year, start_month, start_day)
-        possible_start_date = possible_start_date + 1.year if possible_start_date <= @date
+        possible_start_date += 1.year if possible_start_date <= @date
       else
-        possible_start_date = possible_start_date - 1.year if possible_start_date > @date
+        possible_start_date -= 1.year if possible_start_date > @date
       end
 
       possible_start_date

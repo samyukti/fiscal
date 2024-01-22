@@ -1,5 +1,6 @@
-module Fiscal
+# frozen_string_literal: true
 
+module Fiscal
   class Fiscal
     def initialize(options = {})
       @date    = options[:date]
@@ -22,5 +23,4 @@ module Fiscal
       FiscalPeriod.new(date: @date, country: @country, type: :month, index: index)
     end
   end
-
 end

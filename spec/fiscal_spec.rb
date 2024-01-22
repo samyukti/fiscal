@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Fiscal do
-
   context 'with India country' do
     it "returns '2013-04-01' as fiscal year start date of India for the date '2013-10-10'" do
       Date.fiscal(date: '2013-10-10', country: :in).year.start.should eql('2013-04-01'.to_date)
@@ -18,7 +19,6 @@ describe Fiscal do
     it "returns '2015-04-30' as first fiscal month end date of India for the date '2015-08-25'" do
       Date.fiscal(date: '2015-08-25', country: :in).month(1).end.should eql('2015-04-30'.to_date)
     end
-
   end
 
   context 'with USA country' do
@@ -66,15 +66,15 @@ describe Fiscal do
   end
 
   context 'with default country' do
-    it "returns current calendar year start date as fiscal year start, by default" do
+    it 'returns current calendar year start date as fiscal year start, by default' do
       Date.fiscal.year.start.should eql(Date.today.beginning_of_year)
     end
 
-    it "returns current calendar year end date as fiscal end start, by default" do
+    it 'returns current calendar year end date as fiscal end start, by default' do
       Date.fiscal.year.end.should eql(Date.today.end_of_year)
     end
 
-    it "returns current calendar year start date as fiscal year start, for today" do
+    it 'returns current calendar year start date as fiscal year start, for today' do
       Date.today.fiscal.year.start.should eql(Date.today.beginning_of_year)
     end
   end
