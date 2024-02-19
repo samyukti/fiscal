@@ -1,5 +1,6 @@
-module Fiscal
+# frozen_string_literal: true
 
+module Fiscal
   module FiscalConfig
     def config
       # The World Factbook 2013-14. Washington, DC: Central Intelligence Agency, 2013 .
@@ -8,7 +9,7 @@ module Fiscal
       # NOTE: ki, so are defaulted to 1, 1
 
       # country, month, day
-      {nil: { mm: 1, dd: 1 },
+      { nil: { mm: 1, dd: 1 },
         ad: { mm: 1, dd: 1 },
         ae: { mm: 1, dd: 1 },
         af: { mm: 12, dd: 21 },
@@ -235,9 +236,7 @@ module Fiscal
         ye: { mm: 1, dd: 1 },
         za: { mm: 4, dd: 1 },
         zm: { mm: 1, dd: 1 },
-        zw: { mm: 1, dd: 1 }
-      }
+        zw: { mm: 1, dd: 1 } }
     end
   end
-
 end
